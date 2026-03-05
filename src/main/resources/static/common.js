@@ -19,6 +19,7 @@ window.onload = function () {
     );
   }
 
+  const loader = document.querySelector("#loader");
   const connectBtn = document.querySelector("#db-connect-btn");
   connectBtn.addEventListener("click", async function () {
     const dbUrl = document.querySelector("#db-url").value;
@@ -43,6 +44,8 @@ window.onload = function () {
       alert("비밀번호를 입력하세요.");
       document.querySelector("#db-password").focus();
     } else {
+		
+	  loader.showModal();
       const connectResponse = await fetch("/connect", {
         method: "post",
         headers: {
@@ -56,8 +59,12 @@ window.onload = function () {
           dbPassword,
         }),
       });
-
+	
+	  loader.close();
+	  loader.showModal();
       const tableList = await connectResponse.json();
+	  loader.close();
+	  
       if (tableList.tables && confirm("접속 정보를 저장할까요?")) {
         sessionStorage.setItem("dbUrl", dbUrl);
         sessionStorage.setItem("dbPort", dbPort);
@@ -94,6 +101,7 @@ window.onload = function () {
             this.className = "active";
 
             columnListDom.innerHTML = "";
+			loader.showModal();
             const connectResponse = await fetch("/columns", {
               method: "post",
               headers: {
@@ -104,8 +112,11 @@ window.onload = function () {
                 tableName: this.dataset.tableName,
               }),
             });
-
+			
+			loader.close();
+			loader.showModal();
             const columnList = await connectResponse.json();
+			loader.close();
             if (columnList) {
               const columns = columnList.columns;
               for (const column of columns) {
@@ -155,7 +166,8 @@ window.onload = function () {
       ) {
         sessionStorage.setItem("workspace", workspace);
         sessionStorage.setItem("package", package);
-
+		
+		loader.showModal();
         const makeResponse = await fetch("/make", {
           method: "post",
           headers: {
@@ -170,8 +182,10 @@ window.onload = function () {
             classPrefix,
           }),
         });
-
+		loader.close();
+		loader.showModal();
         const makeResult = await makeResponse.json();
+		loader.close();
         alert(makeResult.result);
       }
     });
