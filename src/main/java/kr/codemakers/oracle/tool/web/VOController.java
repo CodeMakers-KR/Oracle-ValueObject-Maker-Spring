@@ -22,6 +22,11 @@ public class VOController {
 	private TableDao tableDao;
 
 	private void createTableDaoInstance(Map<String, String> param) {
+		if (this.tableDao != null) {
+			this.tableDao.close();
+			this.tableDao.reconnect(param.get("dbUrl"), Integer.parseInt(param.get("dbPort")),
+					param.get("dbDatabase"), param.get("dbUsername"), param.get("dbPassword"));
+		}
 		if (this.tableDao == null) {
 			this.tableDao = new TableDao(param.get("dbUrl"), Integer.parseInt(param.get("dbPort")),
 					param.get("dbDatabase"), param.get("dbUsername"), param.get("dbPassword"));
