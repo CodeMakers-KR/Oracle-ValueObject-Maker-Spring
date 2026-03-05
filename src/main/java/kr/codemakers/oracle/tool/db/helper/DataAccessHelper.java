@@ -41,12 +41,18 @@ public class DataAccessHelper {
 
 	// 2. 커넥션을 맺음 (Session 생성).
 	private void connectDatabase(String url, int port, String database, String username, String password) {
-		final String JDBC_URL = "jdbc:oracle:thin:@" + url + ":" + port + ":" + database;
+		String connectUrl = "jdbc:oracle:thin:@" + url + ":" + port;
+		if (database.startsWith("/")) {
+			connectUrl += database;
+		}
+		else {
+			connectUrl += ":" + database;
+		}
 		final String SCHEMA_NAME = username;
 		final String SCHEMA_PASSWORD = password;
 
 		try {
-			this.connection = DriverManager.getConnection(JDBC_URL, SCHEMA_NAME, SCHEMA_PASSWORD);
+			this.connection = DriverManager.getConnection(connectUrl, SCHEMA_NAME, SCHEMA_PASSWORD);
 			this.connection.setAutoCommit(false); // Manual Commit 으로 설정.
 		} catch (SQLException sqle) {
 			System.out.println("데이터베이스에 연결할 수 없습니다.");
