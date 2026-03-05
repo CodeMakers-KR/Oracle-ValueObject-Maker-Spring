@@ -9,6 +9,12 @@ body {
   background-color: #ccc;
 }
 
+#loader {
+	background-color: #9993;
+	outline: 0;
+	z-index:9999999;
+}
+
 input,
 select,
 button {
